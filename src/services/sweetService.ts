@@ -2,48 +2,37 @@ import axios from "axios";
 
 const API_URL = "http://localhost:3000/api/sweets";
 
-export const getAllSweets = async () => {
+const getAuthHeaders = () => {
   const token = localStorage.getItem("token");
-
-  const response = await axios.get(API_URL, {
+  return {
     headers: {
       Authorization: `Bearer ${token}`
     }
-  });
+  };
+};
 
+
+export const getAllSweets = async () => {
+  const response = await axios.get(API_URL, getAuthHeaders());
   return response.data;
 };
 
-export const purchaseSweet = async (sweetId: number) => {
-  const token = localStorage.getItem("token");
 
+export const purchaseSweet = async (id: number) => {
   const response = await axios.post(
-    `http://localhost:3000/api/sweets/${sweetId}/purchase`,
+    `${API_URL}/${id}/purchase`,
     {},
-    {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }
+    getAuthHeaders()
   );
-
   return response.data;
 };
 
 export const restockSweet = async (sweetId: number, quantity: number) => {
-  const token = localStorage.getItem("token");
-
   const response = await axios.post(
-    `http://localhost:3000/api/sweets/${sweetId}/restock`,
+    `${API_URL}/${sweetId}/restock`,
     { quantity },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }
+    getAuthHeaders()
   );
-
   return response.data;
 };
-
 
